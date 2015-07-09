@@ -11,7 +11,7 @@ BASE_LABEL = ["GitHub"]
 SHOULD_ARCHIVE = false
 
 # The Gmail search to find threads to label
-QUERY = "in:inbox AND
+QUERY = "label:#{BASE_LABEL} AND
          (
            from:\"notifications@github.com\" OR
            from:\"noreply@github.com\"
@@ -72,6 +72,7 @@ class Label
   constructor: (@name, @_label) ->
     @_queue          = []
     @_label        ||= GmailApp.createLabel(@name)
+    @_baseLabel      = GmailApp.getUserLabelByName(BASE_LABEL)
     Label.all[@name] = @
     Label.names.push @name
 
@@ -89,7 +90,9 @@ class Label
   apply: ->
     threads = (t._thread for t in @_queue)
     Thread.done.push(t.id) for t in @_queue when t.id not in Thread.done
-    @_label.addToThreads threads if threads.length
+    if threads.length
+      @_label.addToThreads threads 
+      @_baseLabel.removeFromThreads threads
     @_queue = []
 
 
