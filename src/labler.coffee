@@ -8,7 +8,7 @@ else
 BASE_LABEL = ["GitHub"]
 
 # Archive your messages after labeling.
-SHOULD_ARCHIVE = false
+SHOULD_ARCHIVE = true
 
 # The Gmail search to find threads to label
 QUERY = "label:#{BASE_LABEL} AND
